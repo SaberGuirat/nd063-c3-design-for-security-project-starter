@@ -1,3 +1,31 @@
 Research and analyze which of the vulnerabilities appear to be related to the code that was deployed for the environment in this project.
 
+# Security Hub
+
+the security Hub is showing many hight risks finding related to the code that was deployed such as : 
+
+Security groups should not allow unrestricted access to ports with high risk
+Finding ID: arn:aws:securityhub:us-east-1:444459875810:security-control/EC2.19/finding/c5b90155-1785-4c94-8c48-ba7b0e8050d2
+
+On instance i-00ccfc26046e26ed3, UDP port 23 which is associated with 'Telnet' is reachable from the internet
+Finding ID: inspector/us-east-1/444459875810/fd6c62d3df77c6c406bb5650f13ff29a1b640ee1
+HIGH
+On this instance, UDP port 23, which is associated with Telnet, is reachable from the internet. You can install the Inspector agent on this instance and re-run the assessment to check for any process listening on this port. The instance i-00ccfc26046e26ed3 is located in VPC vpc-030317efe000d35a7 and has an attached ENI eni-0fad4826e18c81342 which uses network ACL acl-054066e6483e551ad. The port is reachable from the internet through Security Group sg-017c6a7b55af07250 and IGW igw-0fd0909b870976dbb
+
+# AWS Inspector
+
+You can check AWS Inspector rapport pdf file on this repo (AWS-Inspector-finding-report.pdf)
+
+# AWS CONFIG 
+
+the AWS config is showing many non compliance status for the vpc , WebAppSG , s3 buckets logging enabled , default encryption enabled , etc ...
+
 Bonus - provide recommendations on how to remediate the vulnerabilities.
+
+
+In order to to remediate the vulnerabilities related to code , the security group(WebAppSG) inbound rules should allow only the Application 
+load balancer tcp connection on port 5000 .
+
+Enable logging and default encryption for S3 buckets (specially for the secret recipes bucket) .
+
+Restrict SSH access to specific ip adresses .

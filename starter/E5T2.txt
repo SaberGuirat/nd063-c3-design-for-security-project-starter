@@ -2,12 +2,63 @@
 
 ## Scan infrastructure as code templates
 
+Since we are deploying the infrastructure with cloudformation , it's recommanded to use AWS CloudFormation Linter(checkov)
+to identify potential code errors and security issues .
+
 ### Example vulnerability
+
+Check: CKV_AWS_24: "Ensure no security groups allow ingress from 0.0.0.0:0 to port 22"
+        FAILED for resource: AWS::EC2::SecurityGroup.WebAppSG
+        File: /c3-app.yml:45-68
+        Guide: https://docs.paloaltonetworks.com/content/techdocs/en_US/prisma/prisma-cloud/prisma-cloud-code-security-policy-reference/aws-policies/aws-networking-policies/networking-1-port-security.html
+
+                45 |   WebAppSG:
+                46 |     Type: AWS::EC2::SecurityGroup
+                47 |     Properties:
+                48 |       GroupName: WebAppSG
+                49 |       GroupDescription: "Security group for this application server"
+                50 |       SecurityGroupEgress:
+                51 |       - IpProtocol: -1
+                52 |         CidrIp: 0.0.0.0/0
+                53 |       SecurityGroupIngress:
+                54 |       - IpProtocol: -1
+                55 |         CidrIp: 0.0.0.0/0
+                56 |       - IpProtocol: tcp
+                57 |         FromPort: 22
+                58 |         ToPort: 22
+                59 |         CidrIp: 0.0.0.0/0
+                60 |       - IpProtocol: tcp
+                61 |         FromPort: 5000
+                62 |         ToPort: 5000
+                63 |         CidrIp: 0.0.0.0/0
+                64 |       - IpProtocol: tcp
+                65 |         FromPort: 80
+                66 |         ToPort: 80
+                67 |         CidrIp: 0.0.0.0/0
+                68 |       VpcId: !ImportValue VpcId
 
 ##Scan AMI’s or containers for OS vulnerabilities
 
+AWS Inspector and Amazon ECR Scan for containers . 
+
 ### Example vulnerability
+
+AWS agent ID i-04d9046192fe02592
+Finding Instance i-04d9046192fe02592 is not compliant with rule 5.2.4 Ensure SSH X11 forwarding is disabled, 1.0.0 CIS Ubuntu Linux 18.04 LTS Benchmark. Applicable profiles: Level 1 - Server, Level 2 - Workstation, Level 2 - Server, Level 1 - Workstation.
+Severity High 
+Description 
+Description The X11Forwarding parameter provides the ability to tunnel X11 traffic through the connection to enable remote graphic connections. Rationale Disable X11 forwarding unless there is an operational requirement to use X11 applications directly. There is a small risk that the remote X11 servers of users who are logged in via SSH with X11 forwarding could be compromised by other users on the X11 server. Note that even if X11 forwarding is disabled, users can always install their own forwarders.
+
+Recommendation 
+Edit the /etc/ssh/sshd_config file to set the parameter as follows: X11Forwarding no
 
 ##Scan an AWS environment for cloud configuration vulnerabilities
 
+AWS Config , AWS Security Hub
+
 ### Example vulnerability
+
+- MFA not enabled for a user , description : Checks whether the AWS Identity and Access Management users have multi-factor authentication (MFA) enabled.
+
+- ALB configuration not redirecting http to htpps , description :  Checks whether HTTP to HTTPS redirection is configured on all HTTP listeners of Application Load Balancers. The rule is NON_COMPLIANT if one or more HTTP listeners of Application Load Balancers do not have HTTP to HTTPS redirection configured.
+
