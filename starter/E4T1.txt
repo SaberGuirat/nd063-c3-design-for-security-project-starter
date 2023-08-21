@@ -2,4 +2,15 @@
 
 # Identify 2-3 changes that can be made to our environment to prevent an ssh brute force attack from the internet.
 
+1- Not allowing ssh connection on the application web server in security group inbound rules . 
+2 - allowing only trusted ip addresses to connect to ssh port in security group inbound rules and remove ssh login with password.
+3- install security tools on application web server such as Fail2Ban which will detect malicious activities and block attackers ip adresses .
+
 # Neither instance should have had access to the secret recipes bucket, in the even that instance API credentials were compromised how could we have prevented access to sensitive data.
+
+the web application EC2 instance profile attached IAM Role has full access to any s3 bucket and that's a violation of the
+least privilege principle , in this case the IAM Role should allow only access to the free recipe s3 bucket with specific
+authorized operations . 
+
+the secret recipes s3 bucket has sensitive data and in our case the s3 bucket is not encrypted , so we need to activate 
+default encryption to fix this security issue . 

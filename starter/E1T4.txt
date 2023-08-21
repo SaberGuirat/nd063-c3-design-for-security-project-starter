@@ -2,4 +2,18 @@ Based on the architecture diagram, and the steps you have taken so far to upload
 
 # Poor practice 1
 
+the web application EC2 instance security group is configured in an insecure manner allowing any protocol connection 
+from any ip adress on any port range , in this case the security group(WebAppSG) inbound rules should allow only the Application 
+load balancer tcp connection on port 5000 , and that's it .
+
 # Poor practice 2
+
+the web application EC2 instance profile attached IAM Role has full access to any s3 bucket and that's a violation of the
+least privilege principle , in this case the IAM Role should allow only access to the free recipe s3 bucket with specific
+authorized operations . 
+
+
+# Poor practice 3
+
+the secret recipes s3 bucket has sensitive data and in our case the s3 bucket is not encrypted , so we need to activate 
+default encryption to fix this security issue . 
